@@ -22,9 +22,9 @@ object Problems {
   penultimate(charsList)
   //Problem 3 -- Find nth in list
   def nth[T](n: Int, values: List[T]): T = values(n)
-
   nth(3, list)
   nth(3, charsList)
+
   // Problem 4 -- Find number of elements in list
   def len[T](values: List[T]): Int = values.length
 
@@ -34,9 +34,9 @@ object Problems {
   def reverse[T](values: List[T]): List[T] = values.reverse
   reverse(list)
   reverse(charsList)
-
   //Problem 6 -- Determine if list is a palindrome
   def isPalindrome[T](values: List[T]): Boolean = values.equals(values.reverse)
+
   isPalindrome(list)
   isPalindrome(charsList)
   isPalindrome("racecar".toList)
@@ -55,7 +55,6 @@ object Problems {
     case Nil => Nil
     case h :: hs => h :: removeConsecDup(hs.dropWhile(_ == h))
   }
-
   def removeConsecDup2[T](values: List[T]): List[T] = values.foldRight(List[T]()) {
     (x, y) => if (y.isEmpty || y.head != x) x :: y else y
   }
@@ -79,7 +78,6 @@ object Problems {
 
   encode(encodingList)
 
-
   // Problem 11 -- Problem 10 but don't have list with 1
   def encode2[T](ls: List[T]): List[Any] = {
     encode(ls) map {
@@ -95,6 +93,7 @@ object Problems {
   }
 
   encodingList == decode(encode(encodingList))
+
   // Problem 13 -- Run-length encoding of a list (direct solution).
   def encodeDirect[T](ls: List[T]): List[(Int, T)] =
     if (ls.isEmpty) Nil
@@ -106,23 +105,59 @@ object Problems {
     }
 
   encodeDirect(encodingList)
-
   // Problem 14 -- Duplicate the elements of a list.
   def duplicateElems[T](ls: List[T]): List[T] = ls match {
     case Nil => Nil
     case x :: xs => x :: x :: duplicateElems(xs)
   }
-
   // Problem 14's proposed answer
-  def duplicateElems2[T](ls: List[T]): List[T] = ls flatMap(x=>List(x,x))
+  def duplicateElems2[T](ls: List[T]): List[T] = ls flatMap (x => List(x, x))
+
   duplicateElems(simpleList)
   duplicateElems2(simpleList)
 
   // Problem 15 -- Duplicate the elements of a list a given number of times.
-  def duplicateElemNTimes[T](n:Int,ls:List[T]):List[T] =
-    ls flatMap(x=>List.fill(n)(x))
+  def duplicateElemNTimes[T](n: Int, ls: List[T]): List[T] =
+    ls flatMap (x => List.fill(n)(x))
 
-  duplicateElemNTimes(3,simpleList)
+  duplicateElemNTimes(3, simpleList)
 
+  // Problem 16 -- Drop every Nth element from a list.
+  // Recursive Answer
+  def dropEveryNth[T](n: Int, ls: List[T]): List[T] = {
+    def internalNth[T](c: Int, ls: List[T]): List[T] = (c,ls) match {
+      case (_,Nil) => Nil
+      case (1, _ :: xs) => internalNth(n, xs)
+      case (_, h :: xs) => h :: internalNth(c - 1, xs)
+    }
+    internalNth(n, ls)
+  }
+
+  dropEveryNth(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+
+  // Problem 16's Functional answer
+  def dropEveryNthFunctional[T](n: Int, ls: List[T]): List[T] = {
+    ls.zipWithIndex filter {v=> (v._2 +1) %n != 0} map {_._1} }
+
+  dropEveryNthFunctional(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+
+  // Problem 17 - Split a list into two parts.
+  def split[T](n:Int,ls:List[T]):(List[T],List[T]) =
+    ls.splitAt(n)
+
+  split(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+
+  // Problem 18 - Extract a slice from a list.
+  def splice[T](a:Int,b:Int,ls:List[T]):List[T] =
+    ls.zipWithIndex filter {v=> (v._2+1)>a && (v._2+1)<=b} map {_._1}
+
+  // Problem 18's Funcational answer
+  def splice2[T](a:Int,b:Int,ls:List[T]):List[T] =
+  ls drop a take (b - (a max 0))
+
+  splice(3,7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+  splice2(3,7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+
+  def x:Int = 0
 
 }
