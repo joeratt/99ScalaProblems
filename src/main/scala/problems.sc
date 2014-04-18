@@ -1,21 +1,19 @@
+import scala.util.Random
+
 /**
  * Created by Joe on 3/22/14.
  */
 
 object Problems {
-
   val list: List[Int] = List(1, 2, 3, 4, 5, 45, 17)
   val charsList: List[Char] = List('a', 'b', 'c', 'd', 'e', 'f')
   val simpleList: List[Char] = List('a', 'b', 'c', 'c', 'd')
   val encodingList: List[Char] = List('a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e')
 
-
   // Problem 1 -- Find last in list
   def last[T](values: List[T]): T = values.last
-
   last(list)
   last(charsList)
-
   // Problem 2 -- Find penultimate in List
   def penultimate[T](values: List[T]): T = values.takeRight(2).head
   penultimate(list)
@@ -24,10 +22,8 @@ object Problems {
   def nth[T](n: Int, values: List[T]): T = values(n)
   nth(3, list)
   nth(3, charsList)
-
   // Problem 4 -- Find number of elements in list
   def len[T](values: List[T]): Int = values.length
-
   len(list)
   len(charsList)
   // Problem 5 -- Reverse input list
@@ -36,7 +32,6 @@ object Problems {
   reverse(charsList)
   //Problem 6 -- Determine if list is a palindrome
   def isPalindrome[T](values: List[T]): Boolean = values.equals(values.reverse)
-
   isPalindrome(list)
   isPalindrome(charsList)
   isPalindrome("racecar".toList)
@@ -55,19 +50,20 @@ object Problems {
     case Nil => Nil
     case h :: hs => h :: removeConsecDup(hs.dropWhile(_ == h))
   }
+
   def removeConsecDup2[T](values: List[T]): List[T] = values.foldRight(List[T]()) {
     (x, y) => if (y.isEmpty || y.head != x) x :: y else y
   }
-
   removeConsecDup(encodingList)
   removeConsecDup2(encodingList)
+
   // Problem 9 -- Pack consecutive duplicates of list elements into sublists.
   def packConsecDup[T](values: List[T]): List[Any] = values match {
     case Nil => Nil
     case x :: xs => (x :: xs).takeWhile(_ == x) :: packConsecDup(xs.dropWhile(_ == x))
   }
-
   packConsecDup(encodingList)
+
 
 
   // Problem 10 -- Pack consecutive duplicates of list elements into sublists.
@@ -75,16 +71,13 @@ object Problems {
     case Nil => Nil
     case x :: xs => ((x :: xs).takeWhile(_ == x).length, x) :: encode(xs.dropWhile(_ == x))
   }
-
   encode(encodingList)
-
   // Problem 11 -- Problem 10 but don't have list with 1
   def encode2[T](ls: List[T]): List[Any] = {
     encode(ls) map {
       t => if (t._1 == 1) t._2 else t
     }
   }
-
   encode2(encodingList)
 
   // Problem 12 -- Decode a run-length encoded list.
@@ -103,7 +96,6 @@ object Problems {
       }
       (packed.length, packed.head) :: encodeDirect(next)
     }
-
   encodeDirect(encodingList)
   // Problem 14 -- Duplicate the elements of a list.
   def duplicateElems[T](ls: List[T]): List[T] = ls match {
@@ -112,7 +104,6 @@ object Problems {
   }
   // Problem 14's proposed answer
   def duplicateElems2[T](ls: List[T]): List[T] = ls flatMap (x => List(x, x))
-
   duplicateElems(simpleList)
   duplicateElems2(simpleList)
 
@@ -125,8 +116,8 @@ object Problems {
   // Problem 16 -- Drop every Nth element from a list.
   // Recursive Answer
   def dropEveryNth[T](n: Int, ls: List[T]): List[T] = {
-    def internalNth[T](c: Int, ls: List[T]): List[T] = (c,ls) match {
-      case (_,Nil) => Nil
+    def internalNth[T](c: Int, ls: List[T]): List[T] = (c, ls) match {
+      case (_, Nil) => Nil
       case (1, _ :: xs) => internalNth(n, xs)
       case (_, h :: xs) => h :: internalNth(c - 1, xs)
     }
@@ -137,27 +128,84 @@ object Problems {
 
   // Problem 16's Functional answer
   def dropEveryNthFunctional[T](n: Int, ls: List[T]): List[T] = {
-    ls.zipWithIndex filter {v=> (v._2 +1) %n != 0} map {_._1} }
-
+    ls.zipWithIndex filter {
+      v => (v._2 + 1) % n != 0
+    } map {
+      _._1
+    }
+  }
   dropEveryNthFunctional(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
-
   // Problem 17 - Split a list into two parts.
-  def split[T](n:Int,ls:List[T]):(List[T],List[T]) =
+  def split[T](n: Int, ls: List[T]): (List[T], List[T]) =
     ls.splitAt(n)
 
   split(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 
   // Problem 18 - Extract a slice from a list.
-  def splice[T](a:Int,b:Int,ls:List[T]):List[T] =
-    ls.zipWithIndex filter {v=> (v._2+1)>a && (v._2+1)<=b} map {_._1}
+  def splice[T](a: Int, b: Int, ls: List[T]): List[T] =
+    ls.zipWithIndex filter {
+      v => (v._2 + 1) > a && (v._2 + 1) <= b
+    } map {
+      _._1
+    }
+
+
 
   // Problem 18's Funcational answer
-  def splice2[T](a:Int,b:Int,ls:List[T]):List[T] =
-  ls drop a take (b - (a max 0))
+  def splice2[T](a: Int, b: Int, ls: List[T]): List[T] =
+    ls drop a take (b - (a max 0))
+  splice(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+  splice2(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 
-  splice(3,7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
-  splice2(3,7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+  // Problem 19 - Rotate a list N places to the left.
+  def rotateN[T](n: Int, ls: List[T]): List[T] = {
+    def boundN: Int = if (ls.isEmpty) 0 else n % ls.length
+    if (boundN < 0) rotateN(boundN + ls.length, ls)
+    else ls.drop(n) ::: ls.take(n)
+  }
+  rotateN(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
+  rotateN(-2, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 
-  def x:Int = 0
+  // Problem 20 -- Remove the Kth element from a list.
+  def removeAt[T](x: Int, ls: List[T]): (List[T], T) =
+    if (x < 0) (ls, ls(0)) /* TODO: Handle this */
+    else if (x > ls.length) (ls, ls(0)) /* TODO: Handle */
+    else (ls.take(x) ::: ls.takeRight(ls.length - x - 1), ls(x))
+  removeAt(1, List('a, 'b, 'c, 'd))
+  removeAt(5, List('a', 'a', 'b'))
+
+  // Problem 21 -  Insert an element at a given position into a list.
+  def insertAt[T](elem: T, x: Int, ls: List[T]): List[T] =
+    ls.take(x) ::: List(elem) ::: ls.takeRight(ls.length - x)
+
+  insertAt('new, 1, List('a, 'b, 'c, 'd))
+
+  // Problem 22 - Create a list containing all integers within a given range.
+  def range(start: Int, stop: Int): List[Int] = {
+    // Tail-recursive helper
+    def help(x: Int): List[Int] =
+      if (x > stop) List()
+      else x::help(x + 1)
+
+    help(start)
+  }
+  range(4, 9)
+
+  // Problem 23 - Extract a given number of randomly selected elements from a list.
+  def randomSelect[T](x:Int,ls:List[T]):List[T] = {
+    def help(y:Int,ls2:List[T]):List[T] =
+      if(y==0) List()
+      else {
+        def thing = removeAt(Random.nextInt(ls2.length-1),ls2)
+        thing._2::help(y-1,thing._1)
+      }
+    help(x,ls)
+  }
+
+  randomSelect(3, List('a, 'b, 'c, 'd, 'f, 'g, 'h))
+
+  
+  def x: Int = 0
+
 
 }
