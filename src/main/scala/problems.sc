@@ -16,6 +16,7 @@ object Problems {
   last(charsList)
   // Problem 2 -- Find penultimate in List
   def penultimate[T](values: List[T]): T = values.takeRight(2).head
+
   penultimate(list)
   penultimate(charsList)
   //Problem 3 -- Find nth in list
@@ -24,14 +25,18 @@ object Problems {
   nth(3, charsList)
   // Problem 4 -- Find number of elements in list
   def len[T](values: List[T]): Int = values.length
+
   len(list)
   len(charsList)
   // Problem 5 -- Reverse input list
   def reverse[T](values: List[T]): List[T] = values.reverse
+
   reverse(list)
   reverse(charsList)
+
   //Problem 6 -- Determine if list is a palindrome
   def isPalindrome[T](values: List[T]): Boolean = values.equals(values.reverse)
+
   isPalindrome(list)
   isPalindrome(charsList)
   isPalindrome("racecar".toList)
@@ -42,18 +47,16 @@ object Problems {
     case stuff: List[_] => makeFlat(stuff)
     case thing => List(thing)
   }
-
   makeFlat(List(1, List(2)))
-
   // Problem 8 -- Eliminate consecutive duplicates
   def removeConsecDup[T](values: List[T]): List[T] = values match {
     case Nil => Nil
     case h :: hs => h :: removeConsecDup(hs.dropWhile(_ == h))
   }
-
   def removeConsecDup2[T](values: List[T]): List[T] = values.foldRight(List[T]()) {
     (x, y) => if (y.isEmpty || y.head != x) x :: y else y
   }
+
   removeConsecDup(encodingList)
   removeConsecDup2(encodingList)
 
@@ -62,8 +65,8 @@ object Problems {
     case Nil => Nil
     case x :: xs => (x :: xs).takeWhile(_ == x) :: packConsecDup(xs.dropWhile(_ == x))
   }
-  packConsecDup(encodingList)
 
+  packConsecDup(encodingList)
 
 
   // Problem 10 -- Pack consecutive duplicates of list elements into sublists.
@@ -78,6 +81,7 @@ object Problems {
       t => if (t._1 == 1) t._2 else t
     }
   }
+
   encode2(encodingList)
 
   // Problem 12 -- Decode a run-length encoded list.
@@ -86,7 +90,6 @@ object Problems {
   }
 
   encodingList == decode(encode(encodingList))
-
   // Problem 13 -- Run-length encoding of a list (direct solution).
   def encodeDirect[T](ls: List[T]): List[(Int, T)] =
     if (ls.isEmpty) Nil
@@ -97,13 +100,16 @@ object Problems {
       (packed.length, packed.head) :: encodeDirect(next)
     }
   encodeDirect(encodingList)
+
   // Problem 14 -- Duplicate the elements of a list.
   def duplicateElems[T](ls: List[T]): List[T] = ls match {
     case Nil => Nil
     case x :: xs => x :: x :: duplicateElems(xs)
   }
+
   // Problem 14's proposed answer
   def duplicateElems2[T](ls: List[T]): List[T] = ls flatMap (x => List(x, x))
+
   duplicateElems(simpleList)
   duplicateElems2(simpleList)
 
@@ -116,7 +122,7 @@ object Problems {
   // Problem 16 -- Drop every Nth element from a list.
   // Recursive Answer
   def dropEveryNth[T](n: Int, ls: List[T]): List[T] = {
-    def internalNth[T](c: Int, ls: List[T]): List[T] = (c, ls) match {
+    def internalNth(c: Int, ls: List[T]): List[T] = (c, ls) match {
       case (_, Nil) => Nil
       case (1, _ :: xs) => internalNth(n, xs)
       case (_, h :: xs) => h :: internalNth(c - 1, xs)
@@ -149,30 +155,32 @@ object Problems {
       _._1
     }
 
-
-
   // Problem 18's Funcational answer
   def splice2[T](a: Int, b: Int, ls: List[T]): List[T] =
     ls drop a take (b - (a max 0))
+
   splice(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
   splice2(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
-
   // Problem 19 - Rotate a list N places to the left.
   def rotateN[T](n: Int, ls: List[T]): List[T] = {
     def boundN: Int = if (ls.isEmpty) 0 else n % ls.length
     if (boundN < 0) rotateN(boundN + ls.length, ls)
     else ls.drop(n) ::: ls.take(n)
   }
+
   rotateN(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
   rotateN(-2, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
-
   // Problem 20 -- Remove the Kth element from a list.
   def removeAt[T](x: Int, ls: List[T]): (List[T], T) =
     if (x < 0) (ls, ls(0)) /* TODO: Handle this */
     else if (x > ls.length) (ls, ls(0)) /* TODO: Handle */
-    else (ls.take(x) ::: ls.takeRight(ls.length - x - 1), ls(x))
+    else
+      (ls.take(x) ::: ls.takeRight(ls.length - x - 1), ls(x))
+
+  removeAt(0, List('a, 'b, 'c, 'd))
   removeAt(1, List('a, 'b, 'c, 'd))
   removeAt(5, List('a', 'a', 'b'))
+
 
   // Problem 21 -  Insert an element at a given position into a list.
   def insertAt[T](elem: T, x: Int, ls: List[T]): List[T] =
@@ -185,26 +193,31 @@ object Problems {
     // Tail-recursive helper
     def help(x: Int): List[Int] =
       if (x > stop) List()
-      else x::help(x + 1)
-
+      else x :: help(x + 1)
     help(start)
   }
-  range(4, 9)
 
+  range(4, 9)
   // Problem 23 - Extract a given number of randomly selected elements from a list.
-  def randomSelect[T](x:Int,ls:List[T]):List[T] = {
-    def help(y:Int,ls2:List[T]):List[T] =
-      if(y==0) List()
+  def randomSelect[T](x: Int, ls: List[T]): List[T] = {
+    def help(y: Int, ls2: List[T]): List[T] =
+      if (y == 0) List()
       else {
-        def thing = removeAt(Random.nextInt(ls2.length-1),ls2)
-        thing._2::help(y-1,thing._1)
+        val thing = removeAt(Random.nextInt(ls2.length), ls2)
+        thing._2 :: help(y - 1, thing._1)
       }
-    help(x,ls)
+    help(x, ls)
   }
 
   randomSelect(3, List('a, 'b, 'c, 'd, 'f, 'g, 'h))
 
-  
+  // Problem 24 - Lotto: Draw N different random numbers from the set 1..M.
+  // Problem 25 - Generate a random permutation of the elements of a list.
+  def randomPermute[T](ls: List[T]): List[T] = randomSelect(ls.length, ls)
+
+
+  randomPermute(List('a, 'b, 'c, 'd, 'e, 'f))
+
   def x: Int = 0
 
 
