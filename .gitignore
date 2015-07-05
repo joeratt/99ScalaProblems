@@ -1,0 +1,14 @@
+*.class
+*.jar
+.properties*
+*.iml
+.idea/
+.settings/
+.idea_modules/
+lib_managed/
+submission/
+.project
+.classpath
+**/target/*
+.DS_Store
+out/
